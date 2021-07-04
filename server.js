@@ -8,25 +8,30 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 app.use(cors());
-// app.options('*', cors());
-
-// app.use(router);
-
+var obj2;
 io.on('connection', socket => {
-    // console.log("hey");
-    socket.on("plz", word =>{
-        console.log("hey");
-        console.log(word);
-    })
-    socket.on('join-room', (roomId, userId) => {
-        console.log(roomId, userId);
-        socket.join(roomId);
-        socket.to(roomId).broadcast.emit('user-connected', userId)
 
-        socket.on('disconnect', () => {
-            socket.to(roomId).broadcast.emit('user-disconnected', userId)
+    socket.on("join-room", (obj)=>{
+        // console.log(obj);
+        socket.on("send-changes", delta =>{
+            socket.broadcast.to(obj.roomId).emit("recieve-changes",delta)
         })
-  })
+        obj2 = obj.roomId
+        socket.join(obj.roomId)
+        socket.broadcast.to(obj.roomId).emit('user-connected', obj.userId)
+        socket.on('sent-message', msgObj=>{
+            console.log(msgObj);
+            socket.broadcast.to(obj.roomId).emit('recieved-msg', msgObj)
+        })
+        socket.on('disconnect', () => {
+            console.log("diconnected");
+            socket.broadcast.to(obj.roomId).emit('user-disconnected', obj.userId)
+        })
+       
+      
+    })
+  
+
 })
 
 server.listen(process.env.PORT || 8001, () => console.log(`Server has started.`));

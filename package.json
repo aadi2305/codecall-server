@@ -6,7 +6,7 @@
     "socket.io": "^1.0.0"
   },
   "scripts": {
-    "start": "PROD=true nodemon server.js"
+    "start": "nodemon server.js"
   },
   "name": "server2",
   "version": "1.0.0",

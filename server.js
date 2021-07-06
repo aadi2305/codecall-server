@@ -16,6 +16,9 @@ io.on('connection', socket => {
         socket.on("send-changes", delta =>{
             socket.broadcast.to(obj.roomId).emit("recieve-changes",delta)
         })
+        socket.on("toggle-editor", yo =>{
+            socket.broadcast.to(obj.roomId).emit("turn-on-editor",yo)
+        })
         obj2 = obj.roomId
         socket.join(obj.roomId)
         socket.broadcast.to(obj.roomId).emit('user-connected', obj.userId)

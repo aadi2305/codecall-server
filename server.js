@@ -1,3 +1,4 @@
+require("dotenv").config();
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
@@ -9,6 +10,10 @@ const io = socketio(server);
 
 app.use(cors());
 var obj2;
+
+app.get("/", (req,res)=>{
+    res.send("its working")
+})
 io.on('connection', socket => {
 
     socket.on("join-room", (obj)=>{
